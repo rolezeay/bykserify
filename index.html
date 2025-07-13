@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Made by zynlope!!!</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+<style>
+  body {
+    margin: 0;
+    background-color: #141414;
+    color: #fff;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    overflow: hidden;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    background-color: #141414;
+    border-radius: 12px;
+    border: 1px solid #222;
+    padding: 30px;
+    box-shadow: 0 0 15px #0008;
+    max-width: 900px;
+    width: 90vw;
+    height: 63vh;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 280px;
+    gap: 18px;
+  }
+
+  h2 {
+    margin: 0 0 12px;
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: 0.03em;
+  }
+
+  p {
+    margin: 0 0 20px;
+    font-weight: 400;
+    font-size: 1rem;
+    color: #ddd;
+  }
+
+  #dropzone {
+    flex-shrink: 0;
+    padding: 20px 0;
+    border: 2px dashed #333;
+    border-radius: 10px;
+    color: #aaa;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+    user-select: none;
+  }
+  #dropzone.dragover {
+    border-color: #fff;
+    color: #fff;
+    background-color: #222;
+  }
+  #dropzone:hover {
+    border-color: #aaa;
+    color: #fff;
+  }
+
+  #uploadBtn {
+    display: none;
+  }
+
+  .toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .toggle-label-text {
+    font-weight: 600;
+    font-size: 1rem;
+    user-select: none;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #555;
+    border-radius: 24px;
+    transition: 0.3s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #eee;
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+
+  .switch input:checked + .slider {
+    background-color: #fff;
+  }
+  .switch input:checked + .slider:before {
+    transform: translateX(22px);
+    background-color: #141414;
+  }
+
+  .switch input:focus + .slider {
+    box-shadow: 0 0 2px 3px #ffffff55;
+  }
+
+  #saveBtn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 14px 0;
+    font-family: 'Inter', monospace;
+    font-weight: 600;
+    font-size: 1.15rem;
+    background-color: #222;
+    border: 2px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+    user-select: none;
+    box-shadow: none;
+  }
+  #saveBtn:hover {
+    background-color: #333;
+    border-color: #fff;
+  }
+
+  .canvas-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1c1c1c;
+    border-radius: 12px;
+    border: 1px solid #222;
+    box-shadow: inset 0 0 25px #0009;
+  }
+
+  canvas {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+    background-color: #141414;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="controls">
+      <h2>Boykisser bubble your image</h2>
+      <p>Upload or drag & drop an image to place it inside the speech bubble.</p>
+
+      <div id="dropzone">Click or drop an image here</div>
+      <input type="file" id="uploadBtn" accept="image/*" />
+
+      <div class="toggle-list">
+        <div class="toggle-row">
+          <span class="toggle-label-text">Save as GIF:</span>
+          <label class="switch">
+            <input type="checkbox" name="saveFormat" value="gif" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label-text">Save as PNG:</span>
+          <label class="switch">
+            <input type="checkbox" name="saveFormat" value="png" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label-text">Save as JPG:</span>
+          <label class="switch">
+            <input type="checkbox" name="saveFormat" value="jpg" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <button id="saveBtn">Save as PNG</button>
+
+      <span id="discordInviteLabel" style="margin-top: 10px; margin-left: 22px; font-weight: 600; font-size: 0.95rem; color: #ccc; user-select: text; display: inline-block;">
+  https://discord.gg/gmt4RFk2ms
+</span>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="canvas" width="512" height="512"></canvas>
+    </div>
+  </div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const dropzone = document.getElementById('dropzone');
+  const toggleInputs = document.querySelectorAll('input[name="saveFormat"]');
+
+  const baseImg = new Image();
+  baseImg.src = 'boykisser-template.png'; 
+  baseImg.crossOrigin = "anonymous";
+
+  let overlayImg = null;
+
+  const bubbleWidth = 300;
+  const bubbleHeight = 90;
+  const bubbleX = (canvas.width - bubbleWidth) / 2;
+  const bubbleY = -5;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (baseImg.complete) {
+      ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
+    }
+    if (overlayImg && overlayImg.complete) {
+      const imgW = overlayImg.naturalWidth;
+      const imgH = overlayImg.naturalHeight;
+
+      const imgAspect = imgW / imgH;
+      const bubbleAspect = bubbleWidth / bubbleHeight;
+
+      let drawW, drawH;
+
+      if (imgAspect > bubbleAspect) {
+        drawW = bubbleWidth;
+        drawH = bubbleWidth / imgAspect;
+      } else {
+        drawH = bubbleHeight;
+        drawW = bubbleHeight * imgAspect;
+
+        if(drawW < bubbleWidth * 0.85){
+          drawW = bubbleWidth * 0.9; 
+          drawH = drawW / imgAspect;
+          if(drawH > bubbleHeight * 1.05) drawH = bubbleHeight * 1.05;
+        }
+      }
+
+      const drawX = bubbleX + (bubbleWidth - drawW) / 2;
+      const drawY = bubbleY + (bubbleHeight - drawH) / 2;
+
+      ctx.drawImage(overlayImg, drawX, drawY, drawW, drawH);
+    }
+  }
+
+  baseImg.onload = () => {
+    draw();
+  };
+
+  function loadImageFile(file) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload a valid image file!');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      overlayImg = new Image();
+      overlayImg.onload = draw;
+      overlayImg.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadBtn.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) loadImageFile(file);
+  });
+
+  dropzone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', e => {
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) loadImageFile(file);
+  });
+
+  dropzone.addEventListener('click', () => {
+    uploadBtn.click();
+  });
+
+  toggleInputs.forEach((checkbox) => {
+    checkbox.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        toggleInputs.forEach(input => {
+          if (input !== e.target) input.checked = false;
+        });
+        updateSaveButtonText(e.target.value);
+      } else {
+        e.target.checked = true;
+      }
+    });
+  });
+
+  function updateSaveButtonText(format) {
+    saveBtn.textContent = `Save as ${format.toUpperCase()}`;
+  }
+
+  const defaultChecked = [...toggleInputs].find(t => t.checked);
+  if(defaultChecked) updateSaveButtonText(defaultChecked.value);
+
+  saveBtn.addEventListener('click', () => {
+    if (!baseImg.complete) {
+      alert('Template image not loaded yet.');
+      return;
+    }
+    const selectedToggle = [...toggleInputs].find(t => t.checked);
+    const selectedFormat = selectedToggle ? selectedToggle.value : 'png';
+
+    if(selectedFormat === 'png') {
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'boykisserified.png';
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    } else if(selectedFormat === 'jpg') {
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'meme-bubble.jpg';
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 'image/jpeg', 0.92);
+    } else if (selectedFormat === 'gif') {
+      const gif = new GIF({
+        workers: 2,
+        quality: 10,
+        width: canvas.width,
+        height: canvas.height,
+        workerScript: 'gif.worker.js'
+      });
+
+      gif.addFrame(canvas, { copy: true, delay: 1000 });
+
+      gif.on('finished', function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'meme-bubble.gif';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      gif.render();
+    }
+  });
+</script>
+</body>
+</html>
